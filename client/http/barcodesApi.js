@@ -12,7 +12,7 @@ export const createBarcode = async (barcode) => {
     return await $host.post(`/api/barcode`, body)
 }
 
-export const fetchBarcodes= async () => {
+export const fetchBarcodes = async () => {
     const {data} = await $host.get('api/barcode')
     return data
 }

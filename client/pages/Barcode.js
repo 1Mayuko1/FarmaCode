@@ -1,8 +1,7 @@
 import React, {useEffect, useState, useContext} from "react";
 import {
     View, Text,
-    StyleSheet, Dimensions,
-    TextInput, Alert, ScrollView,
+    StyleSheet, Dimensions, Alert, ScrollView,
 } from 'react-native'
 import {
     colors, BtnTheme
@@ -11,19 +10,47 @@ import {
 import {Context} from "../App";
 import Painter from "../components/Painter";
 import {Button, Input} from "react-native-elements";
+import {fetchBarcodes} from "../http/barcodesApi";
+import jwtDecode from "jwt-decode";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Barcode = ({ navigation }) => {
 
-    const {recipes} = useContext(Context)
-    const {userProducts} = useContext(Context)
+    const {barcodes} = useContext(Context)
+    const {userBarcodes} = useContext(Context)
 
     const [inputText, setInputText] = useState('')
     const [txtData, setTxtData] = useState('')
     const [showResults, setShowResults] = React.useState(false)
+    const [barcodesState, setBarcodesState] = React.useState([])
+    const [userAuth, setUserAuth] = useState()
+    const [token, setToken] = useState('')
 
-    const onChangeForm = e => {
-        setInputText(e)
+    const checkToken = async () => {
+        try {
+            const value = await AsyncStorage.getItem('token');
+            if (value !== null || undefined) {
+                setUserAuth(true)
+                setToken(jwtDecode(value))
+            } else {
+                setUserAuth(false)
+            }
+        } catch (e) {
+            console.log('error in checkToken', e)
+        }
     }
+
+    useEffect(() => {
+        fetchBarcodes().then(data => {
+            barcodes.setBarcode(data.rows)
+            setBarcodesState(data.rows)
+        })
+        fetchBarcodes().then(data => {
+            barcodes.setBarcode(data.rows)
+            setBarcodesState(data.rows)
+        })
+        checkToken().then()
+    },[])
 
     const onSubmitForm = () => {
         if (inputText.length < 8) {
@@ -34,6 +61,15 @@ const Barcode = ({ navigation }) => {
         } else {
             return Alert.alert('Код повинен містити тільки цифри')
         }
+    }
+
+    const clearState = () => {
+        setInputText('')
+        setTxtData('')
+    }
+
+    const onChangeForm = e => {
+        setInputText(e)
     }
 
     return (
@@ -54,15 +90,23 @@ const Barcode = ({ navigation }) => {
                         <Button
                             title='Намалювати'
                             buttonStyle={{backgroundColor: colors.pastelGray, borderRadius: 10}}
-                            containerStyle={{ width: 200, marginBottom: 25}}
+                            containerStyle={{ width: 150, marginBottom: 25}}
                             titleStyle={{ fontWeight: 'bold', color: colors.beige}}
                             onPress={onSubmitForm}
+                            theme={BtnTheme}
+                        />
+                        <Button
+                            title='Очистити'
+                            buttonStyle={{backgroundColor: colors.wildBlue, borderRadius: 10}}
+                            containerStyle={{ width: 150, marginBottom: 25}}
+                            titleStyle={{ fontWeight: 'bold', color: colors.beige}}
+                            onPress={clearState}
                             theme={BtnTheme}
                         />
                     </View>
 
                     <View>
-                        { showResults ? <Painter startNumber={txtData}/> : null }
+                        { showResults ? <Painter showResults={showResults} startNumber={txtData}/> : null }
                     </View>
                 </View>
             </ScrollView>
@@ -97,6 +141,9 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     submitBtnContainer: {
+        width: "80%",
+        flexDirection: 'row',
+        justifyContent: "space-around",
         marginTop: 20,
         marginBottom: 15,
         alignSelf: 'center',

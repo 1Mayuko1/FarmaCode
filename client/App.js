@@ -6,10 +6,10 @@ import BarcodeStore from "./store/BarcodeStore";
 import AppContainer from "./AppContainer";
 
 LogBox.ignoreLogs([""]);
+
 export const Context = createContext(null)
 
 export default function App() {
-
   return (
       <Context.Provider value={{
         user: new UserStore(),

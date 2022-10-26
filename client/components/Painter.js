@@ -1,24 +1,58 @@
-import React, {useState} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {
     binaryDecode,
     code32Symbols,
     numberInBinary9,
 } from "../constants/utils/consts";
-import {Dimensions, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Alert, Dimensions, Image, StyleSheet, Text, View} from "react-native";
 import {BtnTheme, colors} from "../constants/helpers";
 import {Button, Overlay} from "react-native-elements";
-
+import ViewShot from "react-native-view-shot";
+import * as MediaLibrary from 'expo-media-library';
 
 const Painter = ({startNumber}) => {
 
-    // console.log('startNumber -', startNumber)
-    // Обчислення контрольної цифри C
+    if (startNumber.length < 5) return null
 
-    const [modalVisible, setModalVisible] = useState(false)
+    const [imageUri, setImageUri] = useState('');
+    const [savedImagePath, setSavedImagePath] = useState('');
+    const [modalInfoVisible, setModalInfoVisible] = useState(false)
+    const [modalDownloadVisible, setModalDownloadVisible] = useState(false)
 
-    const toggleModalOverlay = () => {
-        setModalVisible(!modalVisible)
+    useEffect(() => {
+        onCapture()
+    }, [])
+
+    const onCapture = useCallback(  uri => {
+        setSavedImagePath(uri);
+        setImageUri(uri);
+        console.log("Image saved to", uri)
+    }, []);
+
+    const toggleModalInfoOverlay = () => {
+        setModalInfoVisible(!modalInfoVisible)
     }
+
+    const toggleModalDownloadOverlay = () => {
+        setModalDownloadVisible(!modalDownloadVisible)
+    }
+
+    const saveToCameraRoll = async () => {
+        try {
+            console.log('asset', imageUri)
+            await MediaLibrary.saveToLibraryAsync(imageUri)
+            setModalDownloadVisible(!modalDownloadVisible)
+            return Alert.alert('Зображення збережено до галереї')
+        } catch (e) {
+            return console.log('err download -', e)
+        }
+    }
+
+    // 1. TODO Зробити сканер штрихкодів в новій вкладці
+    // 2. TODO Отримати баркоди та додати до них інформацію ( інфу через постман, адмінка - )
+    // 3. TODO Кнопка "Додати в колецію", "Збережені" ( Нова вкладка для збережених )
+
+    // Обчислення контрольної цифри C
 
     let keyNumber = (num) => {
         if (num.length < 1) return null
@@ -44,7 +78,6 @@ const Painter = ({startNumber}) => {
             return res += +el
         })
 
-        // console.log('2. Контрольна цифра -', (res % 10).toString())
         return res % 10
     }
 
@@ -55,7 +88,6 @@ const Painter = ({startNumber}) => {
         if (sequence.length < 1) return null
 
         let data = sequence + keyNumber(startNumber).toString()
-        // console.log('3. Вихідна послідовність -', data)
 
         let resSequence = []
         let iterationNumber = +data
@@ -76,14 +108,7 @@ const Painter = ({startNumber}) => {
             return Object.keys(code32Symbols).find(key => code32Symbols[key] === +el)
         })
 
-        // let coddedArray = resSequence.map(el => {
-        //     return Object.keys(code39Symbols).find(key => code39Symbols[key] === +el)
-        // })
-
         numbersArray = resSequence
-
-        // console.log('4. Послідовність символів ШК Code 32 -', coddedArray.reverse().join(''))
-        // console.log('5. Послідовність з контрольною цифрою -', resSequence.join(' '))
         return coddedArray.reverse()
     }
 
@@ -138,25 +163,27 @@ const Painter = ({startNumber}) => {
         <View>
             <View className="barcode">
                 <View style={styles.barcodeContainer}>
-                    <View style={styles.barCode}>
-                        {barcode}
-                    </View>
-                    <Text style={styles.barcodeTxt}>A{startNumber + keyNumber(startNumber).toString()}</Text>
+                    <ViewShot onCapture={onCapture} captureMode="mount">
+                        <View style={styles.barCode}>
+                            {barcode}
+                        </View>
+                        <Text style={styles.barcodeTxt}>A{startNumber + keyNumber(startNumber).toString()}</Text>
+                    </ViewShot>
                 </View>
             </View>
             <Overlay
-                isVisible={modalVisible}
-                onBackdropPress={toggleModalOverlay}
+                isVisible={modalInfoVisible}
+                onBackdropPress={toggleModalInfoOverlay}
                 overlayStyle={{backgroundColor: colors.beige, borderRadius: 15}}
             >
                 <Info />
                 <View style={styles.submitBtnContainer}>
                     <Button
                         title='Зрозуміло'
-                        buttonStyle={{backgroundColor: colors.wildBlue, borderRadius: 30}}
+                        buttonStyle={{backgroundColor: colors.wildBlue, borderRadius: 10}}
                         containerStyle={{ width: 200, marginBottom: 5}}
                         titleStyle={{ fontWeight: 'bold', color: colors.beige}}
-                        onPress={toggleModalOverlay}
+                        onPress={toggleModalInfoOverlay}
                         theme={BtnTheme}
                     />
                 </View>
@@ -168,7 +195,7 @@ const Painter = ({startNumber}) => {
                         buttonStyle={{backgroundColor: colors.wildBlue, borderRadius: 10}}
                         containerStyle={{ width: 200, marginBottom: 25}}
                         titleStyle={{ fontWeight: 'bold', color: colors.beige}}
-                        onPress={toggleModalOverlay}
+                        onPress={toggleModalInfoOverlay}
                         theme={BtnTheme}
                     />
                 </View>
@@ -178,17 +205,42 @@ const Painter = ({startNumber}) => {
                         buttonStyle={{backgroundColor: colors.pastelGray, borderRadius: 10}}
                         containerStyle={{ width: 200, marginBottom: 25}}
                         titleStyle={{ fontWeight: 'bold', color: colors.beige}}
-                        // onPress={onSubmitForm}
+                        // onPress={pickImage}
                         theme={BtnTheme}
                     />
                 </View>
+                <Overlay
+                    isVisible={modalDownloadVisible}
+                    onBackdropPress={toggleModalDownloadOverlay}
+                    overlayStyle={{backgroundColor: colors.beige, borderRadius: 15}}
+                >
+                    <Image
+                        source={{uri: imageUri}}
+                        style={{
+                            width: 250,
+                            height: 80,
+                            resizeMode: 'contain',
+                            marginTop: 5
+                        }}
+                    />
+                    <View style={styles.submitBtnContainer}>
+                        <Button
+                            title='Зберегти'
+                            buttonStyle={{backgroundColor: colors.wildBlue, borderRadius: 10}}
+                            containerStyle={{ width: 200, marginBottom: 5}}
+                            titleStyle={{ fontWeight: 'bold', color: colors.beige}}
+                            onPress={saveToCameraRoll}
+                            theme={BtnTheme}
+                        />
+                    </View>
+                </Overlay>
                 <View style={styles.downloadBtnContainer}>
                     <Button
                         title='Завантажити'
                         buttonStyle={{backgroundColor: colors.wildBlue, borderRadius: 10}}
                         containerStyle={{ width: 200, marginBottom: 25}}
                         titleStyle={{ fontWeight: 'bold', color: colors.beige}}
-                        // onPress={onSubmitForm}
+                        onPress={toggleModalDownloadOverlay}
                         theme={BtnTheme}
                     />
                 </View>
@@ -209,19 +261,6 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         alignSelf: 'center',
     },
-    // statusTouchContainer: {
-    //     marginBottom: 30,
-    //     alignItems: 'center',
-    // },
-    // statusContainer: {
-    //     display: "flex",
-    //     flexDirection: "row",
-    //     justifyContent: 'space-between',
-    //     height: 40,
-    //     width: 200,
-    //     backgroundColor: colors.shadowBlue,
-    //     borderRadius: 30
-    // },
     h1Text: {
         marginTop: 30,
         fontSize: 30,
