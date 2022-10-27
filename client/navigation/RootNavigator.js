@@ -9,39 +9,12 @@ import Profile from "../pages/Profile";
 import Barcode from '../pages/Barcode';
 import Login from "../pages/Login";
 import {colors, useScreenDimensions} from "../constants/helpers";
+import Scanner from "../pages/Scanner";
+import ScannerCamera from "../components/ScannerCamera";
+import ScannerResult from "../components/ScannerResult";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
-
-// const CalendarStackScreen = () => {
-//     return(
-//         <Stack.Navigator initialRouteName="Calendar" screenOptions={{headerShown: false}}>
-//             <Stack.Screen
-//                 name="Calendar"
-//                 component={Calendar}
-//                 options={{
-//                     headerShown: false,
-//                     tabBarLabel: 'Calendar',
-//                     tabBarIcon: () => (
-//                         <View>
-//                             <Icon
-//                                 name={'search'}
-//                             />
-//                         </View>
-//                     ),
-//                 }}
-//             />
-//             <Stack.Screen
-//                 name="StatisticsForProducts"
-//                 component={StatisticsForProducts}
-//             />
-//             <Stack.Screen
-//                 name="RecipeDetailInCalendar"
-//                 component={RecipeDetail}
-//             />
-//         </Stack.Navigator>
-//     )
-// }
 
 const LoginStackScreen = () => {
     return(
@@ -68,6 +41,36 @@ const LoginStackScreen = () => {
             <Stack.Screen
                 name="Registration"
                 component={Registration}
+            />
+        </Stack.Navigator>
+    )
+}
+
+const ScannerStackScreen = () => {
+    return(
+        <Stack.Navigator initialRouteName="Scanner" screenOptions={{headerShown: false}}>
+            <Stack.Screen
+                name="Scanner"
+                component={Scanner}
+                options={{
+                    headerShown: false,
+                    tabBarLabel: 'Scanner',
+                    tabBarIcon: () => (
+                        <View>
+                            <Icon
+                                name={'ra'}
+                            />
+                        </View>
+                    ),
+                }}
+            />
+            <Stack.Screen
+                name="ScannerCamera"
+                component={ScannerCamera}
+            />
+            <Stack.Screen
+                name="ScannerResult"
+                component={ScannerResult}
             />
         </Stack.Navigator>
     )
@@ -102,6 +105,22 @@ const RootNavigator = () => {
                         ),
                     }}
                     component={Barcode}
+                />
+                <Tab.Screen
+                    name='Scanner'
+                    options={{
+                        tabBarLabel: 'Сканер',
+                        tabBarIcon: () => (
+                            <View>
+                                <Icon
+                                    style={[{color: '#F9F3E7'}]}
+                                    size={28}
+                                    name={'th'}
+                                />
+                            </View>
+                        ),
+                    }}
+                     component={ScannerStackScreen}
                 />
                 <Tab.Screen
                     name='Profile'

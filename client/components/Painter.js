@@ -48,10 +48,6 @@ const Painter = ({startNumber}) => {
         }
     }
 
-    // 1. TODO Зробити сканер штрихкодів в новій вкладці
-    // 2. TODO Отримати баркоди та додати до них інформацію ( інфу через постман, адмінка - )
-    // 3. TODO Кнопка "Додати в колецію", "Збережені" ( Нова вкладка для збережених )
-
     // Обчислення контрольної цифри C
 
     let keyNumber = (num) => {
@@ -161,16 +157,14 @@ const Painter = ({startNumber}) => {
 
     return (
         <View>
-            <View className="barcode">
+            <ViewShot onCapture={onCapture} options={{format: 'jpg'}} captureMode="mount">
                 <View style={styles.barcodeContainer}>
-                    <ViewShot onCapture={onCapture} captureMode="mount">
-                        <View style={styles.barCode}>
-                            {barcode}
-                        </View>
-                        <Text style={styles.barcodeTxt}>A{startNumber + keyNumber(startNumber).toString()}</Text>
-                    </ViewShot>
+                    <View style={styles.barCode}>
+                        {barcode}
+                    </View>
+                    <Text style={styles.barcodeTxt}>A{startNumber + keyNumber(startNumber).toString()}</Text>
                 </View>
-            </View>
+            </ViewShot>
             <Overlay
                 isVisible={modalInfoVisible}
                 onBackdropPress={toggleModalInfoOverlay}
@@ -199,28 +193,29 @@ const Painter = ({startNumber}) => {
                         theme={BtnTheme}
                     />
                 </View>
-                <View style={styles.addBtnContainer}>
-                    <Button
-                        title='Додати в колекцію'
-                        buttonStyle={{backgroundColor: colors.pastelGray, borderRadius: 10}}
-                        containerStyle={{ width: 200, marginBottom: 25}}
-                        titleStyle={{ fontWeight: 'bold', color: colors.beige}}
-                        // onPress={pickImage}
-                        theme={BtnTheme}
-                    />
-                </View>
+                {/*<View style={styles.addBtnContainer}>*/}
+                {/*    <Button*/}
+                {/*        title='Додати в колекцію'*/}
+                {/*        buttonStyle={{backgroundColor: colors.pastelGray, borderRadius: 10}}*/}
+                {/*        containerStyle={{ width: 200, marginBottom: 25}}*/}
+                {/*        titleStyle={{ fontWeight: 'bold', color: colors.beige}}*/}
+                {/*        // onPress={pickImage}*/}
+                {/*        theme={BtnTheme}*/}
+                {/*    />*/}
+                {/*</View>*/}
                 <Overlay
                     isVisible={modalDownloadVisible}
                     onBackdropPress={toggleModalDownloadOverlay}
-                    overlayStyle={{backgroundColor: colors.beige, borderRadius: 15}}
+                    overlayStyle={{backgroundColor: colors.beige, borderRadius: 15, width: 330, height: 300}}
                 >
                     <Image
                         source={{uri: imageUri}}
                         style={{
-                            width: 250,
-                            height: 80,
+                            alignSelf: 'center',
+                            width: 300,
+                            height: 100,
                             resizeMode: 'contain',
-                            marginTop: 5
+                            marginTop: '15%'
                         }}
                     />
                     <View style={styles.submitBtnContainer}>
@@ -237,7 +232,7 @@ const Painter = ({startNumber}) => {
                 <View style={styles.downloadBtnContainer}>
                     <Button
                         title='Завантажити'
-                        buttonStyle={{backgroundColor: colors.wildBlue, borderRadius: 10}}
+                        buttonStyle={{backgroundColor: colors.pastelGray, borderRadius: 10}}
                         containerStyle={{ width: 200, marginBottom: 25}}
                         titleStyle={{ fontWeight: 'bold', color: colors.beige}}
                         onPress={toggleModalDownloadOverlay}
@@ -297,7 +292,7 @@ const styles = StyleSheet.create({
     whiteColumn: {
         width: 3,
         height: 80,
-        backgroundColor: colors.beige
+        backgroundColor: 'white'
     },
     blackColumn: {
         width: 3,
@@ -309,15 +304,18 @@ const styles = StyleSheet.create({
     },
     barCode: {
         height: 80,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginTop: 15,
+        marginLeft: 15,
+        marginRight: 15
     },
     barcodeTxt: {
         textAlign: 'center',
         fontSize: 20,
         marginTop: 3,
+        marginBottom: 8
     },
     btnContainer: {
-        // flexDirection: "row",
         marginTop: 20,
     },
     addBtnContainer: {

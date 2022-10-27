@@ -14,6 +14,14 @@ import {fetchBarcodes} from "../http/barcodesApi";
 import jwtDecode from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+// 1. TODO Зробити сканер штрихкодів в новій вкладці
+// 2. TODO Отримати баркоди та додати до них інформацію ( інфу через постман, адмінка - )
+// 3. TODO Кнопка "Додати в колецію", "Збережені" ( Нова вкладка для збережених )
+// 4. TODO Кнопка Декодувати зімість очистити або нова вкладка для декодування.
+
+// 5. TODO ScannerResult прийняти данні
+// 6. TODO Сканер працюєпогано ( проблема самого сканера )
+
 const Barcode = ({ navigation }) => {
 
     const {barcodes} = useContext(Context)
