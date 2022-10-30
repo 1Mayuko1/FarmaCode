@@ -6,19 +6,26 @@ class BarcodeController {
         try {
             let {startNumber, keyNumber, outputSequence, SHKCode32, codedNumber, info} = req.body
 
+            const testBarcode = await Barcode.findOne({where: {startNumber}})
+            if (testBarcode) {
+                return next(ApiError.badRequest('Штрихкод з таким номером вже існує'))
+            }
+
             const barcode = await Barcode.create({
                 startNumber,
-                keyNumber, outputSequence,
+                keyNumber,
+                outputSequence,
                 SHKCode32,
                 codedNumber
             })
 
             if (info) {
                 info = JSON.parse(info)
-                info.forEach(i => BarcodeInfo.create({
+                console.log(info)
+                await info.forEach(i => BarcodeInfo.create({
+                    id: barcode.id,
                     title: i.title,
-                    description: i.description,
-                    id: barcode.id
+                    description: i.description
                 }))
             }
 
@@ -41,16 +48,30 @@ class BarcodeController {
         return res.json(barcodes)
     }
 
-    async getOne(req, res) {
-        const {id} = req.params
+    // async getOne(req, res) {
+    //     const {id} = req.params
+    //     const barcode = await Barcode.findOne(
+    //         {
+    //             where: {id},
+    //             include: [{model: BarcodeInfo, as: 'info'}]
+    //         },
+    //     )
+    //     if (!barcode) {
+    //         return res.json({message: 'Id не знаайдено'})
+    //     }
+    //     return res.json(barcode)
+    // }
+
+    async getOneByNum(req, res) {
+        const {startNumber} = req.params
         const barcode = await Barcode.findOne(
             {
-                where: {id},
+                where: {startNumber},
                 include: [{model: BarcodeInfo, as: 'info'}]
             },
         )
         if (!barcode) {
-            return res.json({message: 'Id не знаайдено'})
+            return res.json({message: 'startNumber не знаайдено'})
         }
         return res.json(barcode)
     }
@@ -69,7 +90,7 @@ class BarcodeController {
 
             await Barcode.destroy({ where: {id}})
             return res.json(barcode)
-        }catch (e) {
+        } catch (e) {
             next(ApiError.badRequest(e.message))
         }
     }

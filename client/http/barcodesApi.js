@@ -17,6 +17,6 @@ export const fetchBarcodes = async () => {
     return data
 }
 
-export const fetchOneBarcode = async (id) => {
-    return await $host.get(`api/barcode/${+id}/`)
+export const fetchOneBarcodeByNum = async (startNumber) => {
+    return await $host.get(`api/barcode/${startNumber}/`)
 }

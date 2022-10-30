@@ -1,73 +1,62 @@
-import React, { useState, useEffect } from 'react';
-import {Text, View, StyleSheet, Button, Dimensions, Alert} from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import {StyleSheet, Text, View, Button, Alert} from 'react-native';
+import React, { useEffect } from 'react';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import {colors} from "../constants/helpers";
 
-const ScannerCamera = ({ navigation }) => {
-    const [hasPermission, setHasPermission] = useState(null);
-    const [scanned, setScanned] = useState(false);
-    const [scannedData, setScannedData] = useState(false);
+const ScannerCamera = ({navigation}) => {
+    const [hasPermission, setHasPermission] = React.useState(false);
+    const [scanData, setScanData] = React.useState();
 
     useEffect(() => {
-        const getBarCodeScannerPermissions = async () => {
-            const { status } = await BarCodeScanner.requestPermissionsAsync();
-            setHasPermission(status === 'granted');
-        };
-
-        getBarCodeScannerPermissions().then(r => console.log('OK'));
+        (async() => {
+            const {status} = await BarCodeScanner.requestPermissionsAsync();
+            setHasPermission(status === "granted");
+        })();
     }, []);
 
-    // const handleBarCodeScanned = ({ type, scanData }) => {
-    //     try {
-    //         setScanned(true);
-    //         setScannedData(scanData)
-    //         console.log(`type ${type} - data ${scanData}`)
-    //         Alert.alert(`Type: ${type} - Data: ${scanData}`);
-    //         if (!scanData) {
-    //             navigation.navigate('Profile');
-    //         }
-    //         navigation.navigate('ScannerResult', {
-    //             type: type,
-    //             scanData: scanData
-    //         });
-    //     } catch (e) {
-    //         console.log('Error from handleBarCodeScanned ', e)
-    //     }
-    // };
+    if (!hasPermission) {
+        return (
+            <View style={styles.container}>
+                <Text>Please grant camera permissions to app</Text>
+            </View>
+        );
+    }
 
-    const handleBarCodeScanned = ({ type, data }) => {
-        setScanned(true);
-        alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    const handleBarCodeScanned = ({type, data}) => {
+        try {
+            if (!type || !data) {
+                navigation.navigate('Scanner');
+                return Alert.alert('Відскановано не правильно, спробуйте ще')
+            }
+            setScanData(data);
+            console.log(`Data: ${data}`);
+            console.log(`Type: ${type}`);
+            navigation.navigate('ScannerResult', {
+                type: type,
+                scanData: data
+            });
+        } catch (e) {
+            console.log('Error from handleBarCodeScanned:', e)
+        }
     };
 
-    if (hasPermission === null) {
-        return <Text>Requesting for camera permission</Text>;
-    }
-    if (hasPermission === false) {
-        return <Text>No access to camera</Text>;
-    }
-
     return (
-        <View style={styles.mainContainer}>
+        <View style={styles.container}>
             <BarCodeScanner
-                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                 style={StyleSheet.absoluteFillObject}
+                onBarCodeScanned={scanData ? undefined : handleBarCodeScanned}
             />
-            {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+            <StatusBar style="auto" />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    mainContainer: {
-        backgroundColor: colors.beige,
-        height: Dimensions.get('screen').height,
-    },
-    h1Text: {
-        marginTop: 30,
-        fontSize: 30,
-        textAlign: 'center',
-        alignSelf: 'center',
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 });
 

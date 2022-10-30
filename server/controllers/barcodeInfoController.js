@@ -2,6 +2,19 @@ const {BarcodeInfo} = require('../models/models')
 const ApiError = require('../error/ApiError');
 
 class BarcodeInfoController {
+    async create(req, res, next) {
+        const id = +req.params.barcodeId
+        const {info} = req.body
+
+        const barcode = await BarcodeInfo.findOne({where: {id}})
+        if (!barcode) {
+            return next(ApiError.badRequest('Цього id не існує'))
+        }
+
+        const productsData = await BarcodeInfo.create({barcodeId: id, info})
+        return res.json(productsData)
+    }
+
     async getAll(req, res) {
         const infos = await BarcodeInfo.findAll()
         return res.json(infos)

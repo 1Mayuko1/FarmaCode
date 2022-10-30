@@ -12,9 +12,36 @@ import {colors, useScreenDimensions} from "../constants/helpers";
 import Scanner from "../pages/Scanner";
 import ScannerCamera from "../components/ScannerCamera";
 import ScannerResult from "../components/ScannerResult";
+import BarcodeItemInfo from "../components/BarcodeItemInfo";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
+
+const BarcodeStackScreen = () => {
+    return(
+        <Stack.Navigator initialRouteName="Barcode" screenOptions={{headerShown: false}}>
+            <Stack.Screen
+                name="Barcode"
+                component={Barcode}
+                options={{
+                    headerShown: false,
+                    tabBarLabel: 'Barcode',
+                    tabBarIcon: () => (
+                        <View>
+                            <Icon
+                                name={'ra'}
+                            />
+                        </View>
+                    ),
+                }}
+            />
+            <Stack.Screen
+                name="BarcodeItemInfo"
+                component={BarcodeItemInfo}
+            />
+        </Stack.Navigator>
+    )
+}
 
 const LoginStackScreen = () => {
     return(
@@ -104,7 +131,7 @@ const RootNavigator = () => {
                             </View>
                         ),
                     }}
-                    component={Barcode}
+                    component={BarcodeStackScreen}
                 />
                 <Tab.Screen
                     name='Scanner'

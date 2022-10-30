@@ -10,7 +10,7 @@ import {Button, Overlay} from "react-native-elements";
 import ViewShot from "react-native-view-shot";
 import * as MediaLibrary from 'expo-media-library';
 
-const Painter = ({startNumber}) => {
+const Painter = ({startNumber}, {navigation}) => {
 
     if (startNumber.length < 5) return null
 
@@ -193,16 +193,6 @@ const Painter = ({startNumber}) => {
                         theme={BtnTheme}
                     />
                 </View>
-                {/*<View style={styles.addBtnContainer}>*/}
-                {/*    <Button*/}
-                {/*        title='Додати в колекцію'*/}
-                {/*        buttonStyle={{backgroundColor: colors.pastelGray, borderRadius: 10}}*/}
-                {/*        containerStyle={{ width: 200, marginBottom: 25}}*/}
-                {/*        titleStyle={{ fontWeight: 'bold', color: colors.beige}}*/}
-                {/*        // onPress={pickImage}*/}
-                {/*        theme={BtnTheme}*/}
-                {/*    />*/}
-                {/*</View>*/}
                 <Overlay
                     isVisible={modalDownloadVisible}
                     onBackdropPress={toggleModalDownloadOverlay}

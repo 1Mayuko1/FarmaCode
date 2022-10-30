@@ -16,8 +16,8 @@ const UserCode = sequelize.define('user_code', {
 
 const Barcode = sequelize.define('barcode', {
     id: {type: INTEGER, primaryKey: true, autoIncrement: true},
-    startNumber: {type: INTEGER, allowNull: false},
-    keyNumber: {type: INTEGER, allowNull: false},
+    startNumber: {type: STRING, allowNull: false},
+    keyNumber: {type: STRING, allowNull: false},
     outputSequence: {type: STRING, allowNull: false},
     SHKCode32: {type: STRING, allowNull: false},
     codedNumber: {type: STRING, allowNull: false},

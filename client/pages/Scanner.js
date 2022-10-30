@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import {Text, View, StyleSheet, Dimensions, Image, FlatList} from 'react-native';
+import React from 'react';
+import {Text, View, StyleSheet, Dimensions, Image} from 'react-native';
 import {Button, Card, Icon} from "react-native-elements";
 import {BtnTheme, colors} from "../constants/helpers";
 
@@ -47,6 +47,42 @@ const Scanner = ({ navigation }) => {
                         theme={BtnTheme}
                     />
             </Card>
+            <Card containerStyle={styles.secContainerStyle}>
+                <View style={styles.cardBlock}>
+                    <View>
+                        <Image style={styles.img}
+                               source={require('../assets/docBarcode.jpeg')}/>
+                    </View>
+                    <View style={styles.txtContainer}>
+                        <Text style={styles.h1Text}>Documents Scanner</Text>
+                        <View>
+                            <View style={{flexDirection: "row", marginTop: 15, marginLeft: 15, marginBottom: 15}}>
+                                <Icon name='heartbeat' type='font-awesome' color='#86729b'
+                                      style={{marginRight: 8, paddingTop: 5}}/>
+                                <Text style={styles.flatListTxt}>Скануй документи</Text>
+                            </View>
+                            <View style={{flexDirection: "row", marginLeft: 15, marginBottom: 15}}>
+                                <Icon name='heartbeat' type='font-awesome' color='#86729b'
+                                      style={{marginRight: 8, paddingTop: 5}}/>
+                                <Text style={styles.flatListTxt}>Декодуй результат</Text>
+                            </View>
+                            <View style={{flexDirection: "row", marginLeft: 15}}>
+                                <Icon name='heartbeat' type='font-awesome' color='#86729b'
+                                      style={{marginRight: 8, paddingTop: 5}}/>
+                                <Text style={styles.flatListTxt}>Повна інформація</Text>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+                <Button
+                    title='Сканувати'
+                    buttonStyle={{backgroundColor: colors.wildBlue, borderRadius: 10}}
+                    containerStyle={{ width: '90%', marginBottom: 25, alignSelf: 'center'}}
+                    titleStyle={{ fontWeight: 'bold', color: colors.beige}}
+                    onPress={goToScannerCamera}
+                    theme={BtnTheme}
+                />
+            </Card>
         </View>
     );
 }
@@ -66,6 +102,11 @@ const styles = StyleSheet.create({
     },
     containerStyle: {
         marginTop: '20%',
+        borderRadius: 20,
+        backgroundColor: '#f6f6f6'
+    },
+    secContainerStyle: {
+        marginTop: '5%',
         borderRadius: 20,
         backgroundColor: '#f6f6f6'
     },

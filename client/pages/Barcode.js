@@ -1,26 +1,23 @@
 import React, {useEffect, useState, useContext} from "react";
-import {
-    View, Text,
-    StyleSheet, Dimensions, Alert, ScrollView,
-} from 'react-native'
-import {
-    colors, BtnTheme
-
-} from "../constants/helpers";
+import {View, Text, StyleSheet, Dimensions, Alert, ScrollView} from 'react-native'
+import {colors, BtnTheme} from "../constants/helpers";
 import {Context} from "../App";
 import Painter from "../components/Painter";
 import {Button, Input} from "react-native-elements";
-import {fetchBarcodes} from "../http/barcodesApi";
+import {fetchBarcodes } from "../http/barcodesApi";
 import jwtDecode from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// 1. TODO Зробити сканер штрихкодів в новій вкладці
 // 2. TODO Отримати баркоди та додати до них інформацію ( інфу через постман, адмінка - )
-// 3. TODO Кнопка "Додати в колецію", "Збережені" ( Нова вкладка для збережених )
+// 3. TODO Кнопка "Додати в колецію", "Збережені" ( Нова сторінка для збережених )
 // 4. TODO Кнопка Декодувати зімість очистити або нова вкладка для декодування.
 
 // 5. TODO ScannerResult прийняти данні
 // 6. TODO Сканер працюєпогано ( проблема самого сканера )
+
+// 7. TODO Видалити дату бд і спробувати заповвнити її заново + інфа ( як заповнювати баркод з інфою кинув в телеграм
+// 8. TODO З файла BarcodeItemInfo отримати інфу по вибраному числу з бд ( яке приходить з головного компоненту )
+// 9. TODO Функціонал кнопок та форматування !!!
 
 const Barcode = ({ navigation }) => {
 
@@ -49,14 +46,16 @@ const Barcode = ({ navigation }) => {
     }
 
     useEffect(() => {
-        fetchBarcodes().then(data => {
-            barcodes.setBarcode(data.rows)
-            setBarcodesState(data.rows)
-        })
-        fetchBarcodes().then(data => {
-            barcodes.setBarcode(data.rows)
-            setBarcodesState(data.rows)
-        })
+        navigation.addListener('focus', () => {
+            try {
+                fetchBarcodes().then(data => {
+                    barcodes.setBarcode(data.rows)
+                    setBarcodesState(data.rows)
+                })
+            } catch (e) {
+                console.log(e)
+            }
+        });
         checkToken().then()
     },[])
 
@@ -78,6 +77,12 @@ const Barcode = ({ navigation }) => {
 
     const onChangeForm = e => {
         setInputText(e)
+    }
+
+    const goToBarcodeItemInfo = () => {
+        navigation.navigate('BarcodeItemInfo', {
+            barcodeNumber: txtData,
+        });
     }
 
     return (
@@ -114,7 +119,22 @@ const Barcode = ({ navigation }) => {
                     </View>
 
                     <View>
-                        { showResults ? <Painter showResults={showResults} startNumber={txtData}/> : null }
+                        { showResults ?
+                            <>
+                                <Painter showResults={showResults} startNumber={txtData}/>
+                                <View style={styles.aboutBtn}>
+                                    <Button
+                                        title='Про товар'
+                                        buttonStyle={{backgroundColor: colors.wildBlue, borderRadius: 10}}
+                                        containerStyle={{ width: 200, marginBottom: 25}}
+                                        titleStyle={{ fontWeight: 'bold', color: colors.beige}}
+                                        onPress={goToBarcodeItemInfo}
+                                        theme={BtnTheme}
+                                    />
+                                </View>
+                            </>
+
+                            : null }
                     </View>
                 </View>
             </ScrollView>
@@ -156,6 +176,11 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         alignSelf: 'center',
     },
+    aboutBtn: {
+        marginTop: 5,
+        marginBottom: 5,
+        alignSelf: 'center',
+    }
 });
 
 export default Barcode

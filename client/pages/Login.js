@@ -16,6 +16,7 @@ const Login = ({ navigation }) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [note, setNote] = useState('')
+
     const loginHandler = async () => {
         if (typeof password === 'string' || password instanceof String) {
             if (password.trim().length === 0) {

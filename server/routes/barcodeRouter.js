@@ -4,7 +4,8 @@ const barcodeController = require('../controllers/barcodeController')
 
 router.post('/', barcodeController.create)
 router.get('/', barcodeController.getAll)
-router.get('/:id', barcodeController.getOne)
+// router.get('/:id', barcodeController.getOne)
+router.get('/:startNumber', barcodeController.getOneByNum)
 router.delete('/:id', barcodeController.deleteOne)
 
 module.exports = router
