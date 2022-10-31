@@ -40,6 +40,7 @@ const Barcode = ({ navigation }) => {
     const clearState = () => {
         setInputText('')
         setTxtData('')
+        setShowResults(false)
     }
 
     const onChangeForm = e => {
@@ -100,8 +101,11 @@ const Barcode = ({ navigation }) => {
                                     />
                                 </View>
                             </>
+                            : null
+                        }
+                        {
 
-                            : null }
+                        }
                     </View>
                 </View>
             </ScrollView>

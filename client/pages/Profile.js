@@ -115,20 +115,6 @@ const Profile = ({navigation}) => {
                                     clearStorageToken().then()
                                 }}
                             />
-                            <Button
-                                title='Збережені'
-                                buttonStyle={styles.savedPageBtn}
-                                containerStyle={{ width: 200, marginBottom: 25}}
-                                titleStyle={{ fontWeight: 'bold', color: colors.beige}}
-                                onPress={goTo}
-                            />
-                            <Button
-                                title='Шо то там'
-                                buttonStyle={styles.pageBtn}
-                                containerStyle={{ width: 200, marginBottom: 25}}
-                                titleStyle={{ fontWeight: 'bold', color: colors.beige}}
-                                onPress={goTo}
-                            />
                         </>
                         :
                         <Button
