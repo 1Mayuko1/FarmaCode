@@ -137,6 +137,12 @@ const ScannerResult = ({ route, navigation }) => {
         )
     }
 
+    const goToBarcodeItemInfo = () => {
+        navigation.navigate('BarcodeItemInfo', {
+            barcodeNumber: startNumber,
+        });
+    }
+
     return (
         <View style={styles.mainContainer}>
             <Text style={styles.h1Text}>Результат сканування</Text>
@@ -146,11 +152,11 @@ const ScannerResult = ({ route, navigation }) => {
             </View>
             <View style={styles.goToMainPageBtnContainer}>
                 <Button
-                    title='Інформація про товар'
+                    title='Про товар'
                     buttonStyle={{backgroundColor: colors.wildBlue, borderRadius: 10}}
                     containerStyle={{ width: 200, marginBottom: 25}}
                     titleStyle={{ fontWeight: 'bold', color: colors.beige}}
-                    // onPress={goToMainPage}
+                    onPress={goToBarcodeItemInfo}
                     theme={BtnTheme}
                 />
             </View>

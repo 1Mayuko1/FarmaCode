@@ -69,6 +69,10 @@ const LoginStackScreen = () => {
                 name="Registration"
                 component={Registration}
             />
+            <Stack.Screen
+                name="BarcodeItemInfo"
+                component={BarcodeItemInfo}
+            />
         </Stack.Navigator>
     )
 }
