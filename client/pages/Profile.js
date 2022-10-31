@@ -1,16 +1,11 @@
 import React, {useContext, useEffect, useState} from "react";
-import {Dimensions, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {Button, Overlay} from "react-native-elements";
-import {
-    colors,
-
-    useScreenDimensions
-} from "../constants/helpers";
+import {Dimensions, Image, StyleSheet, Text, View} from 'react-native'
+import {Button} from "react-native-elements";
+import {colors, useScreenDimensions} from "../constants/helpers";
 import Login from './Login'
 import {Context} from "../App";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwtDecode from "jwt-decode";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const Profile = ({navigation}) => {
 

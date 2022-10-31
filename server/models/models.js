@@ -20,13 +20,14 @@ const Barcode = sequelize.define('barcode', {
     keyNumber: {type: STRING, allowNull: false},
     outputSequence: {type: STRING, allowNull: false},
     SHKCode32: {type: STRING, allowNull: false},
-    codedNumber: {type: STRING, allowNull: false},
+    codedNumber: {type: STRING, allowNull: false}
 })
 
 const BarcodeInfo = sequelize.define('barcode_info', {
     id: {type: INTEGER, primaryKey: true, autoIncrement: true},
     title: {type: STRING, allowNull: false, defaultValue: ''},
     description: {type: TEXT, allowNull: false, defaultValue: ''},
+    barcodeId: {type: INTEGER, allowNull: false}
 })
 
 Barcode.hasMany(BarcodeInfo, {as: 'info'})

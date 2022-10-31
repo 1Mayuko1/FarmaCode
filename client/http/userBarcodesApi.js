@@ -12,8 +12,3 @@ export const fetchAllUsersBarcodes = async () => {
     const {data} = await $host.get('api/user_code')
     return data
 }
-
-// export const fetchUserBarcodes = async (userId) => {
-//     const {data} = await $host.get(`api/user_code/${+userId}/`)
-//     return data
-// }

@@ -1,8 +1,5 @@
 import React, {useState, useContext} from "react";
-import {
-    View, Text,
-    StyleSheet, Dimensions, Alert,
-} from 'react-native'
+import {View, Text, StyleSheet, Dimensions, Alert} from 'react-native'
 import { Button } from "react-native-elements";
 import {BtnTheme, colors, useScreenDimensions} from "../constants/helpers";
 import Icon from 'react-native-vector-icons/FontAwesome';

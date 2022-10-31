@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import {StyleSheet, Text, View, Button, Alert} from 'react-native';
+import {StyleSheet, Text, View, Alert} from 'react-native';
 import React, { useEffect } from 'react';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 

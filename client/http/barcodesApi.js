@@ -20,3 +20,7 @@ export const fetchBarcodes = async () => {
 export const fetchOneBarcodeByNum = async (startNumber) => {
     return await $host.get(`api/barcode/${startNumber}/`)
 }
+
+export const fetchBarcodeInfo = async (id) => {
+    return await $host.get(`api/barcode/${+id}/`)
+}

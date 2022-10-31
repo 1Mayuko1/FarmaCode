@@ -19,12 +19,12 @@ class BarcodeController {
                 codedNumber
             })
 
+
             if (info) {
                 info = JSON.parse(info)
-                console.log(info)
                 await info.forEach(i => BarcodeInfo.create({
-                    id: barcode.id,
                     title: i.title,
+                    barcodeId: barcode.id,
                     description: i.description
                 }))
             }

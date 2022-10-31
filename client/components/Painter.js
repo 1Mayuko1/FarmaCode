@@ -10,12 +10,10 @@ import {Button, Overlay} from "react-native-elements";
 import ViewShot from "react-native-view-shot";
 import * as MediaLibrary from 'expo-media-library';
 
-const Painter = ({startNumber}, {navigation}) => {
+const Painter = ({startNumber}) => {
 
     if (startNumber.length < 5) return null
-
     const [imageUri, setImageUri] = useState('');
-    const [savedImagePath, setSavedImagePath] = useState('');
     const [modalInfoVisible, setModalInfoVisible] = useState(false)
     const [modalDownloadVisible, setModalDownloadVisible] = useState(false)
 
@@ -24,9 +22,8 @@ const Painter = ({startNumber}, {navigation}) => {
     }, [])
 
     const onCapture = useCallback(  uri => {
-        setSavedImagePath(uri);
         setImageUri(uri);
-        console.log("Image saved to", uri)
+        // console.log("Image saved to", uri)
     }, []);
 
     const toggleModalInfoOverlay = () => {

@@ -5,58 +5,25 @@ import {Context} from "../App";
 import Painter from "../components/Painter";
 import {Button, Input} from "react-native-elements";
 import {fetchBarcodes } from "../http/barcodesApi";
-import jwtDecode from "jwt-decode";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
-// 2. TODO Отримати баркоди та додати до них інформацію ( інфу через постман, адмінка - )
-// 3. TODO Кнопка "Додати в колецію", "Збережені" ( Нова сторінка для збережених )
-// 4. TODO Кнопка Декодувати зімість очистити або нова вкладка для декодування.
-
-// 5. TODO ScannerResult прийняти данні
-// 6. TODO Сканер працюєпогано ( проблема самого сканера )
-
-// 7. TODO Видалити дату бд і спробувати заповвнити її заново + інфа ( як заповнювати баркод з інфою кинув в телеграм
-// 8. TODO З файла BarcodeItemInfo отримати інфу по вибраному числу з бд ( яке приходить з головного компоненту )
-// 9. TODO Функціонал кнопок та форматування !!!
 
 const Barcode = ({ navigation }) => {
 
     const {barcodes} = useContext(Context)
-    const {userBarcodes} = useContext(Context)
 
     const [inputText, setInputText] = useState('')
     const [txtData, setTxtData] = useState('')
     const [showResults, setShowResults] = React.useState(false)
-    const [barcodesState, setBarcodesState] = React.useState([])
-    const [userAuth, setUserAuth] = useState()
-    const [token, setToken] = useState('')
-
-    const checkToken = async () => {
-        try {
-            const value = await AsyncStorage.getItem('token');
-            if (value !== null || undefined) {
-                setUserAuth(true)
-                setToken(jwtDecode(value))
-            } else {
-                setUserAuth(false)
-            }
-        } catch (e) {
-            console.log('error in checkToken', e)
-        }
-    }
 
     useEffect(() => {
         navigation.addListener('focus', () => {
             try {
                 fetchBarcodes().then(data => {
                     barcodes.setBarcode(data.rows)
-                    setBarcodesState(data.rows)
                 })
             } catch (e) {
                 console.log(e)
             }
         });
-        checkToken().then()
     },[])
 
     const onSubmitForm = () => {
